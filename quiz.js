@@ -279,9 +279,9 @@ class Quiz {
 			const $__quizProgressBarProgressValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress-value');
 			$__quizProgressBarProgressValue.textContent = this.value + '%';
 
-			console.log('class ProgressBar -> init() => init!');
+			console.log('progressBarInit() => init!');
 		} else {
-			console.log(`class ProgressBar -> init() => Couldn't find progressBarSelector element ${this.progressBarSelector}!`);
+			console.log(`progressBarInit() => Couldn't find progressBarSelector element ${this.progressBarSelector}!`);
 			this.increaseProgress = () => { return };
 		}
 	}
@@ -296,7 +296,7 @@ class Quiz {
 
 		function smoothProgress() {
 			if (value <= this.value && value <= 100) {
-			console.log(`class ProgressBar -> increaseProgress() => ${value}`);
+			console.log(`increaseProgress() => ${value}`);
 
 			const $__quizProgressBarValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__value');
 			$__quizProgressBarValue.textContent = `${value}%`;
@@ -317,7 +317,7 @@ class Quiz {
 	} else {
 		this.value += this.percentOfOneQuestion;
 
-		console.log(`class ProgressBar -> increaseProgress() => ${this.value}`);
+		console.log(`increaseProgress() => ${this.value}`);
 
 		const $__quizProgressBarValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__value');
 		$__quizProgressBarValue.textContent = `${this.value}%`;
@@ -332,7 +332,7 @@ class Quiz {
 	/* ======= Progress bar END ======= */
 }
 
-window.quiz = new Quiz('.quiz', '.quiz-wrapper', quizData, {
+const quizOne = new Quiz('.quiz', '.quiz-wrapper', quizData, {
 	nextBtnText: "Далее",
 	sendBtnText: "Отправить",
   }, { // Progress bar options:
@@ -341,7 +341,7 @@ window.quiz = new Quiz('.quiz', '.quiz-wrapper', quizData, {
 		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
 });
 
-window.quiz2 = new Quiz('.quiz2', '.quiz-wrapper2', quizData, {
+const quizTwo = new Quiz('.quiz2', '.quiz-wrapper2', quizData, {
 	nextBtnText: "Далее",
 	sendBtnText: "Отправить",
   }, { // Progress bar options:
@@ -349,8 +349,6 @@ window.quiz2 = new Quiz('.quiz2', '.quiz-wrapper2', quizData, {
 		// zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
 		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
 });
-
-
 
 // Old quiz instance
 // window.quiz = new Quiz('.quiz', quizData, {
