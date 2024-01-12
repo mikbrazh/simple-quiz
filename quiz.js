@@ -150,12 +150,12 @@ class Quiz {
 	events() {
 		console.log('events!')
 		this.$el.addEventListener('click', (e) => {
-			if (e.target == document.querySelector('[data-next-btn]')) {
+			if (e.target == this.$el.querySelector('[data-next-btn]')) {
 				this.addToSend();
 				this.nextQuestion();
 			}
 
-			if (e.target == document.querySelector('[data-send]')) {
+			if (e.target == this.$el.querySelector('[data-send]')) {
 				this.send();
 			}
 		});
@@ -332,7 +332,16 @@ class Quiz {
 	/* ======= Progress bar END ======= */
 }
 
-const quizOne = new Quiz('.quiz', '.quiz-wrapper', quizData, {
+const quizOne = new Quiz('.quiz-1', '.quiz-1-wrapper', quizData, {
+	nextBtnText: "Далее",
+	sendBtnText: "Отправить",
+  }, { // Progress bar options:
+		// smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
+		zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
+		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
+});
+
+const quizTwo = new Quiz('.quiz-2', '.quiz-2-wrapper', quizData, {
 	nextBtnText: "Далее",
 	sendBtnText: "Отправить",
   }, { // Progress bar options:
@@ -341,11 +350,11 @@ const quizOne = new Quiz('.quiz', '.quiz-wrapper', quizData, {
 		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
 });
 
-const quizTwo = new Quiz('.quiz2', '.quiz-wrapper2', quizData, {
+const quizThree = new Quiz('.quiz-3', '.quiz-3-wrapper', quizData, {
 	nextBtnText: "Далее",
 	sendBtnText: "Отправить",
   }, { // Progress bar options:
-		// smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
+		smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
 		// zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
 		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
 });
