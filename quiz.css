@@ -1,5 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+/* ======= quiz-progress-bar START ======= */
+.quiz-wrapper  {
+    width: 660px;
+    height: auto;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.quiz-progress-bar__value {
+    padding-left: 7px;
+}
+
+.quiz-progress-bar__bar {
+    margin-bottom: 10px;
+    background-color: lightgrey;
+    border-radius: 20px;
+}
+
+.quiz-progress-bar__progress {
+    width: 0;
+    height: 20px;
+    background-color: rebeccapurple;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    border-radius: 20px;
+}
+
+.quiz-progress-bar__progress-value {
+    padding-left: 7px;
+}
+/* ======= quiz-progress-bar END ======= */
+
 .quiz {
 	border: 1px solid #000;
 	width: 600px;
