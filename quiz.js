@@ -43,13 +43,12 @@ const quizData = [{
 			type: "text"
 		},
 		]
-	}
+	},
 ];
-
 
 const quizTemplate = (data = [], dataLength = 0, options) => {
 	const {number, title} = data;
-	const {nextBtnText} = options;
+	const {prevBtnText, nextBtnText} = options;
 	const answers = data.answers.map(item => {
 		return `
 			<label class="quiz-question__label">
@@ -67,6 +66,7 @@ const quizTemplate = (data = [], dataLength = 0, options) => {
 				<div class="quiz-question__answers">
 					${answers.join('')}
 				</div>
+				<button type="button" class="quiz-question__btn" data-prev-btn>${prevBtnText}</button>
 				<button type="button" class="quiz-question__btn" data-next-btn>${nextBtnText}</button>
 			</div>
 		</div>
@@ -100,6 +100,9 @@ class Quiz {
 			this.completeEnd = false;
 	
 		if (this.zeroStart === false) this.completeEnd = false;
+
+		this.bgProgressColor = progressBarOptions.bgProgressColor;
+		this.bgBarColor = progressBarOptions.bgBarColor;
 	
 		// The number property from the last element of the array
 		this.completeEnd ? this.numberOfQuestions = quizData[quizData.length - 1].number - 1 : this.numberOfQuestions = quizData[quizData.length - 1].number;
@@ -109,8 +112,8 @@ class Quiz {
 		this.zeroStart ? this.value = 0 : this.value = this.percentOfOneQuestion;
 		/* ======= Progress bar END ======= */
 
-		this.init()
-		this.events()
+		this.init();
+		this.events();
 
 		/* ======= Progress bar START ======= */
 		this.progressBarInit();
@@ -120,6 +123,12 @@ class Quiz {
 	init() {
 		console.log('init!');
 		this.$el.innerHTML = quizTemplate(this.data[this.counter], this.dataLength, this.options);
+
+		/* ======= prev-btn START ======= */
+		if ((this.counter == 0)) {
+			this.$el.querySelector('[data-prev-btn]').remove();
+		}
+		/* ======= prev-btn END ======= */
 	}
 
 	nextQuestion() {
@@ -147,6 +156,27 @@ class Quiz {
 		}
 	}
 
+	/* ======= prev-btn START ======= */
+	prevQuestion() {
+		console.log('prev question!');
+
+			if (this.counter > 0) {
+				this.counter--;
+				this.$el.innerHTML = quizTemplate(this.data[this.counter], this.dataLength, this.options);
+
+				if ((this.counter == 0)) {
+					this.$el.querySelector('[data-prev-btn]').remove();
+				}
+			} else {
+				console.log('А все! начало!');
+			}
+
+			/* ======= Progress bar START ======= */
+			this.decreaseProgress();
+			/* ======= Progress bar END ======= */
+	}
+	/* ======= prev-btn END ======= */
+
 	events() {
 		console.log('events!')
 		this.$el.addEventListener('click', (e) => {
@@ -154,6 +184,13 @@ class Quiz {
 				this.addToSend();
 				this.nextQuestion();
 			}
+
+			/* ======= prev-btn START ======= */
+			if (e.target == this.$el.querySelector('[data-prev-btn]')) {
+				console.log('previous question!');
+				this.prevQuestion();
+			}
+			/* ======= prev-btn END ======= */
 
 			if (e.target == this.$el.querySelector('[data-send]')) {
 				this.send();
@@ -220,6 +257,8 @@ class Quiz {
 				}
 			}
 
+			console.log(formData);
+
 			const response = fetch("mail.php", {
 				method: 'POST',
 				body: formData
@@ -273,8 +312,12 @@ class Quiz {
 			const $__quizProgressBarValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__value');
 			$__quizProgressBarValue.textContent = this.value + '%';
 
+			const $__quizProgressBarBar = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__bar');
+			$__quizProgressBarBar.style.backgroundColor = this.bgBarColor;
+
 			const $__quizProgressBarProgress = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress');
 			$__quizProgressBarProgress.style.width = `${this.value}%`;
+			$__quizProgressBarProgress.style.backgroundColor = this.bgProgressColor;
 
 			const $__quizProgressBarProgressValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress-value');
 			$__quizProgressBarProgressValue.textContent = this.value + '%';
@@ -312,7 +355,7 @@ class Quiz {
 		}
 		}
 		else {
-		return;
+			return;
 		}
 	} else {
 		this.value += this.percentOfOneQuestion;
@@ -329,34 +372,87 @@ class Quiz {
 		$__quizProgressBarProgressValue.textContent = `${this.value}%`;
 	}
 	}
+
+	decreaseProgress() {
+		if (this.smoothProgress) {
+			if (this.value > 0) {
+			let value = this.value;
+			this.value -= this.percentOfOneQuestion;
+	
+			const interval = setInterval(smoothProgress.bind(this), 15);
+	
+			function smoothProgress() {
+				if (value >= this.value && value >= 0) {
+				console.log(`increaseProgress() => ${value}`);
+	
+				const $__quizProgressBarValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__value');
+				$__quizProgressBarValue.textContent = `${value}%`;
+	
+				const $__quizProgressBarProgress = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress');
+				$__quizProgressBarProgress.style.width = `${value}%`;
+	
+				const $__quizProgressBarProgressValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress-value');
+				$__quizProgressBarProgressValue.textContent = `${value}%`;
+	
+				value--;
+				}
+			}
+			}
+			else {
+				return;
+			}
+		} else {
+			this.value -= this.percentOfOneQuestion;
+	
+			console.log(`increaseProgress() => ${this.value}`);
+	
+			const $__quizProgressBarValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__value');
+			$__quizProgressBarValue.textContent = `${this.value}%`;
+	
+			const $__quizProgressBarProgress = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress');
+			$__quizProgressBarProgress.style.width = `${this.value}%`;
+	
+			const $__quizProgressBarProgressValue = this.progressBarSelectorElem.querySelector('.quiz-progress-bar__progress-value');
+			$__quizProgressBarProgressValue.textContent = `${this.value}%`;
+		}
+		}
 	/* ======= Progress bar END ======= */
 }
 
 const quizOne = new Quiz('.quiz-1', '.quiz-1-wrapper', quizData, {
+	prevBtnText: "Назад",
 	nextBtnText: "Далее",
 	sendBtnText: "Отправить",
   }, { // Progress bar options:
+		bgBarColor: 'lightgrey',
+		bgProgressColor: 'rebeccapurple',
+		// smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
+		// zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
+		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
+});
+
+const quizTwo = new Quiz('.quiz-2', '.quiz-2-wrapper', quizData, {
+	prevBtnText: "Назад",
+	nextBtnText: "Далее",
+	sendBtnText: "Отправить",
+  }, { // Progress bar options:
+		bgBarColor: 'lightgrey',
+		bgProgressColor: 'crimson',
 		// smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
 		zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
 		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
 });
 
-const quizTwo = new Quiz('.quiz-2', '.quiz-2-wrapper', quizData, {
-	nextBtnText: "Далее",
-	sendBtnText: "Отправить",
-  }, { // Progress bar options:
-		// smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
-		// zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
-		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
-});
-
 const quizThree = new Quiz('.quiz-3', '.quiz-3-wrapper', quizData, {
+	prevBtnText: "Назад",
 	nextBtnText: "Далее",
 	sendBtnText: "Отправить",
   }, { // Progress bar options:
+		bgBarColor: 'lightgrey',
+		bgProgressColor: 'lightseagreen',
 		smoothProgress: false, // Makes progress smooth/sharp. DEFAULT VALUE = true
 		// zeroStart: false, // Sets the initial value to 0. DEFAULT VALUE = true
-		// completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
+		completeEnd: true, // Every time completes progress at 100%. DEFAULT VALUE = false
 });
 
 // Old quiz instance

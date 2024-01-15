@@ -33,6 +33,12 @@
 }
 /* ======= quiz-progress-bar END ======= */
 
+/* ======= quiz-question__btn START ======= */
+.quiz-question__btn {
+	margin-bottom: 10px;
+}
+/* ======= quiz-question__btn END ======= */
+
 .quiz {
 	border: 1px solid #000;
 	width: 600px;
