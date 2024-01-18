@@ -251,6 +251,8 @@ class Quiz {
 		if (this.valid()) {
 			const formData = new FormData();
 
+			console.log(this.resultArray);
+
 			for (let item of this.resultArray) {
 				for (let obj in item) {
 					formData.append(obj, item[obj].substring(0, item[obj].length - 1));
@@ -290,6 +292,9 @@ class Quiz {
 				}
 			}
 		}
+		console.log(s);
+		console.log(s[s.length]);
+		console.log(s[field.name]);
 		return s
 	}
 
